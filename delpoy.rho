@@ -1,0 +1,662 @@
+
+            new entryCh, erc1155OutputCh, lookup(`rho:registry:lookup`), stdout(`rho:io:stdout`) in {
+
+              new mainCh,
+  createTokenCh,
+  purchaseCh,
+  entryCh,
+  entryUriCh,
+  setLockedCh,
+  updateTokenDataCh,
+  updateUriCh,
+  hashCh,
+  verifySignatureCh,
+  bags,
+  tokensData,
+  verifySignatureAndUpdateNonceCh,
+  insertArbitrary(`rho:registry:insertArbitrary`),
+  stdout(`rho:io:stdout`),
+  secpVerify(`rho:crypto:secp256k1Verify`),
+  blake2b256(`rho:crypto:blake2b256Hash`),
+  revAddress(`rho:rev:address`),
+  registryLookup(`rho:registry:lookup`)
+in {
+
+
+  /*
+    bags: {
+      [bagId: String (incremental id)]: {
+        publicKey: String (public key),
+        n: Nil / String (token id),
+        price: Nil / Int
+        quantity: Int
+      }
+    }
+  */
+  bags!({"0": { "publicKey": "0", "n": "0", "price": 1, "quantity": 1},
+"1": { "publicKey": "0", "n": "1", "price": 1, "quantity": 1},
+"2": { "publicKey": "0", "n": "2", "price": 1, "quantity": 1},
+"3": { "publicKey": "0", "n": "3", "price": 1, "quantity": 1},
+"4": { "publicKey": "0", "n": "4", "price": 1, "quantity": 1},
+"5": { "publicKey": "0", "n": "5", "price": 1, "quantity": 1},
+"6": { "publicKey": "0", "n": "6", "price": 1, "quantity": 1},
+"7": { "publicKey": "0", "n": "7", "price": 1, "quantity": 1},
+"8": { "publicKey": "0", "n": "8", "price": 1, "quantity": 1},
+"9": { "publicKey": "0", "n": "9", "price": 1, "quantity": 1},
+"10": { "publicKey": "0", "n": "10", "price": 1, "quantity": 1},
+"11": { "publicKey": "0", "n": "11", "price": 1, "quantity": 1},
+"12": { "publicKey": "0", "n": "12", "price": 1, "quantity": 1},
+"13": { "publicKey": "0", "n": "13", "price": 1, "quantity": 1},
+"14": { "publicKey": "0", "n": "14", "price": 1, "quantity": 1},
+"15": { "publicKey": "0", "n": "15", "price": 1, "quantity": 1},
+"16": { "publicKey": "0", "n": "16", "price": 1, "quantity": 1},
+"17": { "publicKey": "0", "n": "17", "price": 1, "quantity": 1},
+"18": { "publicKey": "0", "n": "18", "price": 1, "quantity": 1},
+"19": { "publicKey": "0", "n": "19", "price": 1, "quantity": 1},
+"20": { "publicKey": "0", "n": "20", "price": 1, "quantity": 1},
+"21": { "publicKey": "0", "n": "21", "price": 1, "quantity": 1},
+"22": { "publicKey": "0", "n": "22", "price": 1, "quantity": 1},
+"23": { "publicKey": "0", "n": "23", "price": 1, "quantity": 1},
+"24": { "publicKey": "0", "n": "24", "price": 1, "quantity": 1},
+"25": { "publicKey": "0", "n": "25", "price": 1, "quantity": 1},
+"26": { "publicKey": "0", "n": "26", "price": 1, "quantity": 1},
+"27": { "publicKey": "0", "n": "27", "price": 1, "quantity": 1},
+"28": { "publicKey": "0", "n": "28", "price": 1, "quantity": 1},
+"29": { "publicKey": "0", "n": "29", "price": 1, "quantity": 1},
+"30": { "publicKey": "0", "n": "30", "price": 1, "quantity": 1},
+"31": { "publicKey": "0", "n": "31", "price": 1, "quantity": 1},
+"32": { "publicKey": "0", "n": "32", "price": 1, "quantity": 1},
+"33": { "publicKey": "0", "n": "33", "price": 1, "quantity": 1},
+"34": { "publicKey": "0", "n": "34", "price": 1, "quantity": 1},
+"35": { "publicKey": "0", "n": "35", "price": 1, "quantity": 1},
+"36": { "publicKey": "0", "n": "36", "price": 1, "quantity": 1},
+"37": { "publicKey": "0", "n": "37", "price": 1, "quantity": 1},
+"38": { "publicKey": "0", "n": "38", "price": 1, "quantity": 1},
+"39": { "publicKey": "0", "n": "39", "price": 1, "quantity": 1},
+"40": { "publicKey": "0", "n": "40", "price": 1, "quantity": 1},
+"41": { "publicKey": "0", "n": "41", "price": 1, "quantity": 1},
+"42": { "publicKey": "0", "n": "42", "price": 1, "quantity": 1},
+"43": { "publicKey": "0", "n": "43", "price": 1, "quantity": 1},
+"44": { "publicKey": "0", "n": "44", "price": 1, "quantity": 1},
+"45": { "publicKey": "0", "n": "45", "price": 1, "quantity": 1},
+"46": { "publicKey": "0", "n": "46", "price": 1, "quantity": 1},
+"47": { "publicKey": "0", "n": "47", "price": 1, "quantity": 1},
+"48": { "publicKey": "0", "n": "48", "price": 1, "quantity": 1},
+"49": { "publicKey": "0", "n": "49", "price": 1, "quantity": 1},
+"50": { "publicKey": "0", "n": "50", "price": 1, "quantity": 1},
+"51": { "publicKey": "0", "n": "51", "price": 1, "quantity": 1},
+"52": { "publicKey": "0", "n": "52", "price": 1, "quantity": 1},
+"53": { "publicKey": "0", "n": "53", "price": 1, "quantity": 1},
+"54": { "publicKey": "0", "n": "54", "price": 1, "quantity": 1},
+"55": { "publicKey": "0", "n": "55", "price": 1, "quantity": 1},
+"56": { "publicKey": "0", "n": "56", "price": 1, "quantity": 1},
+"57": { "publicKey": "0", "n": "57", "price": 1, "quantity": 1},
+"58": { "publicKey": "0", "n": "58", "price": 1, "quantity": 1},
+"59": { "publicKey": "0", "n": "59", "price": 1, "quantity": 1},
+"60": { "publicKey": "0", "n": "60", "price": 1, "quantity": 1},
+"61": { "publicKey": "0", "n": "61", "price": 1, "quantity": 1},
+"62": { "publicKey": "0", "n": "62", "price": 1, "quantity": 1},
+"63": { "publicKey": "0", "n": "63", "price": 1, "quantity": 1},
+"64": { "publicKey": "0", "n": "64", "price": 1, "quantity": 1},
+"65": { "publicKey": "0", "n": "65", "price": 1, "quantity": 1},
+"66": { "publicKey": "0", "n": "66", "price": 1, "quantity": 1},
+"67": { "publicKey": "0", "n": "67", "price": 1, "quantity": 1},
+"68": { "publicKey": "0", "n": "68", "price": 1, "quantity": 1},
+"69": { "publicKey": "0", "n": "69", "price": 1, "quantity": 1},
+"70": { "publicKey": "0", "n": "70", "price": 1, "quantity": 1},
+"71": { "publicKey": "0", "n": "71", "price": 1, "quantity": 1},
+"72": { "publicKey": "0", "n": "72", "price": 1, "quantity": 1},
+"73": { "publicKey": "0", "n": "73", "price": 1, "quantity": 1},
+"74": { "publicKey": "0", "n": "74", "price": 1, "quantity": 1},
+"75": { "publicKey": "0", "n": "75", "price": 1, "quantity": 1},
+"76": { "publicKey": "0", "n": "76", "price": 1, "quantity": 1},
+"77": { "publicKey": "0", "n": "77", "price": 1, "quantity": 1},
+"78": { "publicKey": "0", "n": "78", "price": 1, "quantity": 1},
+"79": { "publicKey": "0", "n": "79", "price": 1, "quantity": 1},
+"80": { "publicKey": "0", "n": "80", "price": 1, "quantity": 1},
+"81": { "publicKey": "0", "n": "81", "price": 1, "quantity": 1},
+"82": { "publicKey": "0", "n": "82", "price": 1, "quantity": 1},
+"83": { "publicKey": "0", "n": "83", "price": 1, "quantity": 1},
+"84": { "publicKey": "0", "n": "84", "price": 1, "quantity": 1},
+"85": { "publicKey": "0", "n": "85", "price": 1, "quantity": 1},
+"86": { "publicKey": "0", "n": "86", "price": 1, "quantity": 1},
+"87": { "publicKey": "0", "n": "87", "price": 1, "quantity": 1},
+"88": { "publicKey": "0", "n": "88", "price": 1, "quantity": 1},
+"89": { "publicKey": "0", "n": "89", "price": 1, "quantity": 1},
+"90": { "publicKey": "0", "n": "90", "price": 1, "quantity": 1},
+"91": { "publicKey": "0", "n": "91", "price": 1, "quantity": 1},
+"92": { "publicKey": "0", "n": "92", "price": 1, "quantity": 1},
+"93": { "publicKey": "0", "n": "93", "price": 1, "quantity": 1},
+"94": { "publicKey": "0", "n": "94", "price": 1, "quantity": 1},
+"95": { "publicKey": "0", "n": "95", "price": 1, "quantity": 1},
+"96": { "publicKey": "0", "n": "96", "price": 1, "quantity": 1},
+"97": { "publicKey": "0", "n": "97", "price": 1, "quantity": 1},
+"98": { "publicKey": "0", "n": "98", "price": 1, "quantity": 1},
+"99": { "publicKey": "0", "n": "99", "price": 1, "quantity": 1},
+"100": { "publicKey": "0", "n": "100", "price": 1, "quantity": 1},
+"101": { "publicKey": "0", "n": "101", "price": 1, "quantity": 1},
+"102": { "publicKey": "0", "n": "102", "price": 1, "quantity": 1},
+"103": { "publicKey": "0", "n": "103", "price": 1, "quantity": 1},
+"104": { "publicKey": "0", "n": "104", "price": 1, "quantity": 1},
+"105": { "publicKey": "0", "n": "105", "price": 1, "quantity": 1},
+"106": { "publicKey": "0", "n": "106", "price": 1, "quantity": 1},
+"107": { "publicKey": "0", "n": "107", "price": 1, "quantity": 1},
+"108": { "publicKey": "0", "n": "108", "price": 1, "quantity": 1},
+"109": { "publicKey": "0", "n": "109", "price": 1, "quantity": 1},
+"110": { "publicKey": "0", "n": "110", "price": 1, "quantity": 1},
+"111": { "publicKey": "0", "n": "111", "price": 1, "quantity": 1},
+"112": { "publicKey": "0", "n": "112", "price": 1, "quantity": 1},
+"113": { "publicKey": "0", "n": "113", "price": 1, "quantity": 1},
+"114": { "publicKey": "0", "n": "114", "price": 1, "quantity": 1},
+"115": { "publicKey": "0", "n": "115", "price": 1, "quantity": 1},
+"116": { "publicKey": "0", "n": "116", "price": 1, "quantity": 1},
+"117": { "publicKey": "0", "n": "117", "price": 1, "quantity": 1},
+"118": { "publicKey": "0", "n": "118", "price": 1, "quantity": 1},
+"119": { "publicKey": "0", "n": "119", "price": 1, "quantity": 1},
+"120": { "publicKey": "0", "n": "120", "price": 1, "quantity": 1},
+"121": { "publicKey": "0", "n": "121", "price": 1, "quantity": 1},
+"122": { "publicKey": "0", "n": "122", "price": 1, "quantity": 1},
+"123": { "publicKey": "0", "n": "123", "price": 1, "quantity": 1},
+"124": { "publicKey": "0", "n": "124", "price": 1, "quantity": 1},
+"125": { "publicKey": "0", "n": "125", "price": 1, "quantity": 1},
+"126": { "publicKey": "0", "n": "126", "price": 1, "quantity": 1},
+"127": { "publicKey": "0", "n": "127", "price": 1, "quantity": 1},
+"128": { "publicKey": "0", "n": "128", "price": 1, "quantity": 1},
+"129": { "publicKey": "0", "n": "129", "price": 1, "quantity": 1},
+"130": { "publicKey": "0", "n": "130", "price": 1, "quantity": 1},
+"131": { "publicKey": "0", "n": "131", "price": 1, "quantity": 1},
+"132": { "publicKey": "0", "n": "132", "price": 1, "quantity": 1},
+"133": { "publicKey": "0", "n": "133", "price": 1, "quantity": 1},
+"134": { "publicKey": "0", "n": "134", "price": 1, "quantity": 1},
+"135": { "publicKey": "0", "n": "135", "price": 1, "quantity": 1},
+"136": { "publicKey": "0", "n": "136", "price": 1, "quantity": 1},
+"137": { "publicKey": "0", "n": "137", "price": 1, "quantity": 1},
+"138": { "publicKey": "0", "n": "138", "price": 1, "quantity": 1},
+"139": { "publicKey": "0", "n": "139", "price": 1, "quantity": 1},
+"140": { "publicKey": "0", "n": "140", "price": 1, "quantity": 1},
+"141": { "publicKey": "0", "n": "141", "price": 1, "quantity": 1},
+"142": { "publicKey": "0", "n": "142", "price": 1, "quantity": 1},
+"143": { "publicKey": "0", "n": "143", "price": 1, "quantity": 1},
+"144": { "publicKey": "0", "n": "144", "price": 1, "quantity": 1},
+"145": { "publicKey": "0", "n": "145", "price": 1, "quantity": 1},
+"146": { "publicKey": "0", "n": "146", "price": 1, "quantity": 1},
+"147": { "publicKey": "0", "n": "147", "price": 1, "quantity": 1},
+"148": { "publicKey": "0", "n": "148", "price": 1, "quantity": 1},
+"149": { "publicKey": "0", "n": "149", "price": 1, "quantity": 1},
+"150": { "publicKey": "0", "n": "150", "price": 1, "quantity": 1},
+"151": { "publicKey": "0", "n": "151", "price": 1, "quantity": 1},
+"152": { "publicKey": "0", "n": "152", "price": 1, "quantity": 1},
+"153": { "publicKey": "0", "n": "153", "price": 1, "quantity": 1},
+"154": { "publicKey": "0", "n": "154", "price": 1, "quantity": 1},
+"155": { "publicKey": "0", "n": "155", "price": 1, "quantity": 1},
+"156": { "publicKey": "0", "n": "156", "price": 1, "quantity": 1},
+"157": { "publicKey": "0", "n": "157", "price": 1, "quantity": 1},
+"158": { "publicKey": "0", "n": "158", "price": 1, "quantity": 1},
+"159": { "publicKey": "0", "n": "159", "price": 1, "quantity": 1},
+"160": { "publicKey": "0", "n": "160", "price": 1, "quantity": 1},
+"161": { "publicKey": "0", "n": "161", "price": 1, "quantity": 1},
+"162": { "publicKey": "0", "n": "162", "price": 1, "quantity": 1},
+"163": { "publicKey": "0", "n": "163", "price": 1, "quantity": 1},
+"164": { "publicKey": "0", "n": "164", "price": 1, "quantity": 1},
+"165": { "publicKey": "0", "n": "165", "price": 1, "quantity": 1},
+"166": { "publicKey": "0", "n": "166", "price": 1, "quantity": 1},
+"167": { "publicKey": "0", "n": "167", "price": 1, "quantity": 1},
+"168": { "publicKey": "0", "n": "168", "price": 1, "quantity": 1},
+"169": { "publicKey": "0", "n": "169", "price": 1, "quantity": 1},
+"170": { "publicKey": "0", "n": "170", "price": 1, "quantity": 1},
+"171": { "publicKey": "0", "n": "171", "price": 1, "quantity": 1},
+"172": { "publicKey": "0", "n": "172", "price": 1, "quantity": 1},
+"173": { "publicKey": "0", "n": "173", "price": 1, "quantity": 1},
+"174": { "publicKey": "0", "n": "174", "price": 1, "quantity": 1},
+"175": { "publicKey": "0", "n": "175", "price": 1, "quantity": 1},
+"176": { "publicKey": "0", "n": "176", "price": 1, "quantity": 1},
+"177": { "publicKey": "0", "n": "177", "price": 1, "quantity": 1},
+"178": { "publicKey": "0", "n": "178", "price": 1, "quantity": 1},
+"179": { "publicKey": "0", "n": "179", "price": 1, "quantity": 1},
+"180": { "publicKey": "0", "n": "180", "price": 1, "quantity": 1},
+"181": { "publicKey": "0", "n": "181", "price": 1, "quantity": 1},
+"182": { "publicKey": "0", "n": "182", "price": 1, "quantity": 1},
+"183": { "publicKey": "0", "n": "183", "price": 1, "quantity": 1},
+"184": { "publicKey": "0", "n": "184", "price": 1, "quantity": 1},
+"185": { "publicKey": "0", "n": "185", "price": 1, "quantity": 1},
+"186": { "publicKey": "0", "n": "186", "price": 1, "quantity": 1},
+"187": { "publicKey": "0", "n": "187", "price": 1, "quantity": 1},
+"188": { "publicKey": "0", "n": "188", "price": 1, "quantity": 1},
+"189": { "publicKey": "0", "n": "189", "price": 1, "quantity": 1},
+"190": { "publicKey": "0", "n": "190", "price": 1, "quantity": 1},
+"191": { "publicKey": "0", "n": "191", "price": 1, "quantity": 1},
+"192": { "publicKey": "0", "n": "192", "price": 1, "quantity": 1},
+"193": { "publicKey": "0", "n": "193", "price": 1, "quantity": 1},
+"194": { "publicKey": "0", "n": "194", "price": 1, "quantity": 1},
+"195": { "publicKey": "0", "n": "195", "price": 1, "quantity": 1},
+"196": { "publicKey": "0", "n": "196", "price": 1, "quantity": 1},
+"197": { "publicKey": "0", "n": "197", "price": 1, "quantity": 1},
+"198": { "publicKey": "0", "n": "198", "price": 1, "quantity": 1},
+"199": { "publicKey": "0", "n": "199", "price": 1, "quantity": 1},
+"200": { "publicKey": "0", "n": "200", "price": 1, "quantity": 1},
+"201": { "publicKey": "0", "n": "201", "price": 1, "quantity": 1},
+"202": { "publicKey": "0", "n": "202", "price": 1, "quantity": 1},
+"203": { "publicKey": "0", "n": "203", "price": 1, "quantity": 1},
+"204": { "publicKey": "0", "n": "204", "price": 1, "quantity": 1},
+"205": { "publicKey": "0", "n": "205", "price": 1, "quantity": 1},
+"206": { "publicKey": "0", "n": "206", "price": 1, "quantity": 1},
+"207": { "publicKey": "0", "n": "207", "price": 1, "quantity": 1},
+"208": { "publicKey": "0", "n": "208", "price": 1, "quantity": 1},
+"209": { "publicKey": "0", "n": "209", "price": 1, "quantity": 1},
+"210": { "publicKey": "0", "n": "210", "price": 1, "quantity": 1},
+"211": { "publicKey": "0", "n": "211", "price": 1, "quantity": 1},
+"212": { "publicKey": "0", "n": "212", "price": 1, "quantity": 1},
+"213": { "publicKey": "0", "n": "213", "price": 1, "quantity": 1},
+"214": { "publicKey": "0", "n": "214", "price": 1, "quantity": 1},
+"215": { "publicKey": "0", "n": "215", "price": 1, "quantity": 1},
+"216": { "publicKey": "0", "n": "216", "price": 1, "quantity": 1},
+"217": { "publicKey": "0", "n": "217", "price": 1, "quantity": 1},
+"218": { "publicKey": "0", "n": "218", "price": 1, "quantity": 1},
+"219": { "publicKey": "0", "n": "219", "price": 1, "quantity": 1},
+"220": { "publicKey": "0", "n": "220", "price": 1, "quantity": 1},
+"221": { "publicKey": "0", "n": "221", "price": 1, "quantity": 1},
+"222": { "publicKey": "0", "n": "222", "price": 1, "quantity": 1},
+"223": { "publicKey": "0", "n": "223", "price": 1, "quantity": 1},
+"224": { "publicKey": "0", "n": "224", "price": 1, "quantity": 1}
+}) |
+
+  /*
+    tokensData: {
+      [n: Strig (token id)]: String (registry URI)
+    }
+  */
+  tokensData!({/*DEFAULT_TOKENS_DATA*/}) |
+
+  for (@(payload, returnCh) <= verifySignatureAndUpdateNonceCh) {
+    stdout!("verifySignatureAndUpdateNonceCh") |
+    match payload {
+      { "newNonce": String, "signature": String} => {
+        for (@current <<- mainCh) {
+          blake2b256!(
+            current.get("nonce").toUtf8Bytes(),
+            *hashCh
+          ) |
+          for (@hash <- hashCh) {
+            secpVerify!(
+              hash,
+              payload.get("signature").hexToBytes(),
+              current.get("publicKey").hexToBytes(),
+              *verifySignatureCh
+            )
+          } |
+          for (@result <- verifySignatureCh) {
+            match result {
+              true => {
+                @returnCh!(true) |
+                for (@c <- mainCh) {
+                  mainCh!(c.set("nonce", payload.get("newNonce")))
+                }
+              }
+              false => {
+                @returnCh!("error: Invalid signature, could not perform operation")
+              }
+            }
+          }
+        }
+      }
+      _ => {
+        @returnCh!("error: invalid payload, structure should be { "newNonce": String, "signature": String }")
+      }
+    }
+  } |
+
+  contract setLockedCh(payload, return) = {
+    stdout!("setLockedCh") |
+
+    for (@current <<- mainCh) {
+      match current.get("locked") {
+        true => {
+          return!("error: contract is already locked")
+        }
+        false => {
+          new verifyCh in {
+            verifySignatureAndUpdateNonceCh!((
+              {
+                "newNonce": *payload.get("newNonce"),
+                "signature": *payload.get("signature"),
+              },
+              *verifyCh
+            )) |
+            for (@verified <- verifyCh) {
+              match verified {
+                true => {
+                  for (@c <- mainCh) {
+                    mainCh!(c.set("locked", true))
+                  } |
+                  return!(true)
+                }
+                err => {
+                  return!(err)
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  } |
+
+  contract updateTokenDataCh(payload, return) = {
+    stdout!("updateTokenDataCh") |
+
+    for (@current <<- mainCh) {
+      match current.get("locked") {
+        true => {
+          return!("error: contract is locked, cannot update token data")
+        }
+        false => {
+          new verifyCh in {
+            verifySignatureAndUpdateNonceCh!((
+              {
+                "newNonce": *payload.get("newNonce"),
+                "signature": *payload.get("signature"),
+              },
+              *verifyCh
+            )) |
+            for (@verified <- verifyCh) {
+              match verified {
+                true => {
+                  for (@currentTokensData <- tokensData) {
+                    tokensData!(
+                      currentTokensData.set(*payload.get("n"), *payload.get("data"))
+                    )
+                  } |
+                  return!(true)
+                }
+                err => {
+                  return!(err)
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  } |
+
+  // add a token (1 or more)
+  contract createTokenCh(payload, return) = {
+    stdout!("createTokenCh") |
+
+    for (@current <<- mainCh) {
+      match current.get("locked") {
+        true => {
+          return!("error: contract is locked, cannot create token")
+        }
+        false => {
+          for (@currentBags <- bags) {
+            new verifyCh in {
+              verifySignatureAndUpdateNonceCh!((
+                {
+                  "newNonce": *payload.get("newNonce"),
+                  "signature": *payload.get("signature"),
+                },
+                *verifyCh
+              )) |
+              for (@verified <- verifyCh) {
+                match verified {
+                  true => {
+                    match "${n}" %% { "n": currentBags.size() } {
+                      bagId => {
+                        new nCh in {
+
+                          match *payload.get("n") {
+                            // token n already exists
+                            String => { nCh!(*payload.get("n")) }
+                            // token n does not exist, bag ID will be used as n
+                            _ => { nCh!(bagId) }
+                          } |
+
+                          for (@n <- nCh) {
+
+                            bags!(
+                              currentBags.set(bagId, {
+                                "quantity": *payload.get("quantity"),
+                                "publicKey": *payload.get("publicKey"),
+                                "n": n,
+                                "price": *payload.get("price"),
+                              })
+                            ) |
+
+                            match *payload.get("data") {
+                              Nil => {}
+                              data => {
+                                for (@currentTokensData <- tokensData) {
+                                  tokensData!(
+                                    currentTokensData.set(n, data)
+                                  )
+                                }
+                              }
+                            } |
+
+                            return!(true)
+                          }
+                        }
+                      }
+                    }
+                  }
+                  err => {
+                    return!(err)
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  } |
+
+  // purchase token (1 or more)
+  contract purchaseCh(payload, return) = {
+    stdout!("purchaseCh") |
+    for (@currentBags <- bags) {
+      match currentBags.get(*payload.get("bagId")) {
+        Nil => {
+          bags!(currentBags) |
+          return!("error : token (bag ID) " ++ *payload.get("bagId") ++ " does not exist")
+        }
+        bag => {
+          match bag.get("quantity") - *payload.get("quantity") >= 0 {
+            false => {
+              bags!(currentBags) |
+              return!("error : not enough tokens in bag (bag ID) " ++ *payload.get("bagId") ++ " available")
+            }
+            true => {
+              new RevVaultCh, ownerRevAddressCh in {
+
+                registryLookup!(`rho:rchain:revVault`, *RevVaultCh) |
+                revAddress!("fromPublicKey", token.get("publicKey").hexToBytes(), *ownerRevAddressCh) |
+
+                for (@(_, RevVault) <- RevVaultCh; @ownerRevAddress <- ownerRevAddressCh) {
+                  match (
+                    *payload.get("purseRevAddr"),
+                    ownerRevAddress,
+                    *payload.get("quantity") * bag.get("price")
+                  ) {
+                    (from, to, amount) => {
+                      new purseVaultCh in {
+                        @RevVault!("findOrCreate", from, *purseVaultCh) |
+                        for (@(true, purseVault) <- purseVaultCh) {
+
+                          new resultCh in {
+                            @purseVault!("transfer", to, amount, *payload.get("purseAuthKey"), *resultCh) |
+                            for (@result <- resultCh) {
+
+                              match result {
+                                (true, Nil) => {
+                                  match "${bagId}" %% { "bagId": currentBags.size() } {
+                                    bagId => {
+                                      bags!(
+                                        // New bag ID for new token ownership
+                                        currentBags.set(bagId, {
+                                          "quantity": *payload.get("quantity"),
+                                          "publicKey": *payload.get("publicKey"),
+                                          "n": bag.get("n"),
+                                          "price": Nil,
+                                        // Udate quantity in seller token ownership
+                                        }).set(*payload.get("bagId"), {
+                                          "quantity": bag.get("quantity") - *payload.get("quantity"),
+                                          "publicKey": bag.get("publicKey"),
+                                          "n": bag.get("n"),
+                                          "price": bag.get("price"),
+                                        })
+                                      ) |
+                                      return!(true)
+                                    }
+                                  }
+                                }
+                                _ => {
+                                  bags!(currentBags) |
+                                  return!("error : REV transfer went wrong " ++ result.nth(2))
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  } |
+
+  contract entryCh(action, return) = {
+    match *action.get("type") {
+      "READ_BAGS" => {
+        for (currentBags <<- bags) {
+          return!(*currentBags)
+        }
+      }
+      "READ_TOKENS_DATA" => {
+        for (@currentTokensData <<- tokensData) {
+          return!(currentTokensData)
+        }
+      }
+      "READ" => {
+        for (current <<- mainCh) {
+          return!(*current)
+        }
+      }
+      "SET_LOCKED" => {
+        match *action.get("payload") {
+          { "locked": true, "signature": String, "newNonce": String } => {
+            setLockedCh!(*action.get("payload"), *return)
+          }
+          _ => {
+            return!("error: invalid payload, structure should be { 'signature': String, 'newNonce': String, 'locked': Boolean }")
+          }
+        }
+      }
+      "UPDATE_TOKEN_DATA" => {
+        match *action.get("payload") {
+          { "signature": String, "newNonce": String, "n": String, "data": _ } => {
+            updateTokenDataCh!(*action.get("payload"), *return)
+          }
+          _ => {
+            return!("error: invalid payload, structure should be { 'signature': String, 'newNonce': String, 'n': String, 'data': _ }")
+          }
+        }
+      }
+      "CREATE_TOKEN" => {
+        match *action.get("payload") {
+          {
+            "signature": String,
+            "newNonce": String,
+            "quantity": Int,
+            "publicKey": String,
+            "price": Nil / Int,
+            "n": Nil / String,
+            "data": _
+          } => {
+            createTokenCh!(*action.get("payload"), *return)
+          }
+          _ => {
+            return!("error: invalid payload, structure should be { "signature": String, "newNonce": String, "quantity": Int, "n": Nil or String, "price": Nil or Int, "publicKey": String, "data": _ }")
+          }
+        }
+      }
+      "PURCHASE_TOKEN" => {
+        match *action.get("payload") {
+          { "quantity": Int, "bagId": String, "publicKey": String, "purseRevAddr": _, "purseAuthKey": _ } => {
+            purchaseCh!(*action.get("payload"), *return)
+          }
+          _ => {
+            return!("error: invalid payload, structure should be { "quantity": Int, "n": Int, "publicKey": String }")
+          }
+        }
+      }
+      _ => {
+        return!("error: unknown action")
+      }
+    }
+  } |
+
+  insertArbitrary!(*entryCh, *entryUriCh) |
+
+  for (entryUri <- entryUriCh) {
+
+    mainCh!({
+      "registryUri": *entryUri,
+      "locked": false,
+      "publicKey": "04b50dbf4e03cf9abe39238086ca74f53a9ec9f1b68efc6376cb0cd88dd263ea7b987c5a0f3c655252abdfac247d8eb76b3c93f95bbc61467a0dc78c8d32a5bbb7",
+      "nonce": "6b8a9ccfbd914187befec0da33632ad6",
+      "version": "0.2"
+    }) |
+    stdout!({
+      "registryUri": *entryUri,
+      "locked": false,
+      "publicKey": "04b50dbf4e03cf9abe39238086ca74f53a9ec9f1b68efc6376cb0cd88dd263ea7b987c5a0f3c655252abdfac247d8eb76b3c93f95bbc61467a0dc78c8d32a5bbb7",
+      "nonce": "6b8a9ccfbd914187befec0da33632ad6",
+      "version": "0.2"
+    })
+    | erc1155OutputCh!({
+              "registryUri": *entryUri,
+            })
+  }
+} |
+
+              for (@output <- erc1155OutputCh) {
+                stdout!("WILL CREATE FILE") |
+          
+                stdout!({
+                  "rows": 15,
+                  "price": 1,
+                  "columns": 15,
+                  "erc1155RegistryUri": output.get("registryUri"),
+                }) |
+      
+                lookup!(`rho:id:twy3q3zypduixfhs8zxg1jcmzyeuc9t1yy6fhscqp7j3oa9jrkokum`, *entryCh) |
+              
+                for(entry <- entryCh) {
+                  entry!(
+                    {
+                      "type": "ADD",
+                      "payload": {
+                        "id": "values",
+                        "file": {
+                          "rows": 15,
+                          "price": 1,
+                          "columns": 15,
+                          "erc1155RegistryUri": output.get("registryUri"),
+                        },
+                        "nonce": "0ee364c6659448d689efccea9129c794",
+                        "signature": "SIGNATURE"
+                      }
+                    },
+                    *stdout
+                  )
+                }
+              }
+            }
+            

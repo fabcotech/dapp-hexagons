@@ -1,0 +1,16 @@
+new return, entryCh, readCh, lookup(`rho:registry:lookup`) in {
+    lookup!(`rho:id:twy3q3zypduixfhs8zxg1jcmzyeuc9t1yy6fhscqp7j3oa9jrkokum`, *entryCh) |
+    for(entry <- entryCh) {
+      new x in {
+        entry!({ "type": "READ" }, *x) |
+        for (y <- x) {
+          new z in {
+            lookup!(*y.get("files").get("index"), *z) |
+            for (value <- z) {
+              return!(*value)
+            }
+          }
+        }
+      }
+    }
+  }
