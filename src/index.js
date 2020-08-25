@@ -8,7 +8,8 @@ let registryUri = undefined;
 // In Dappy, window is already loaded when this code executes
 if (typeof dappyRChain !== "undefined") {
   dappyRChain
-    .fetch("dappy://betanetwork/REGISTRY_URI")
+    // shortcut
+    .fetch("dappy://REGISTRY_URI")
     .then((a) => {
       const response = JSON.parse(a);
       const rholangTerm = response.expr[0];
@@ -22,7 +23,8 @@ if (typeof dappyRChain !== "undefined") {
       console.log(jsValue);
       if (jsValue.files.values) {
         dappyRChain
-          .exploreDeploys("dappy://betanetwork/explore-deploys", [
+          // shortcut
+          .exploreDeploys("dappy://explore-deploys", [
             /* Get values (rows, columns, price) from the rholang-files-module contract */
             `new return,
               fileCh,
@@ -46,7 +48,8 @@ if (typeof dappyRChain !== "undefined") {
             console.log(values);
 
             dappyRChain
-              .exploreDeploys("dappy://betanetwork/explore-deploys", [
+              // shortcut
+              .exploreDeploys("dappy://explore-deploys", [
                 /* Get all bags from ERC-1155 contract */
                 `new return,
                 entryCh,

@@ -1,6 +1,6 @@
 {
   "name": "dapp-hexagons",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,7 @@
     "d3-array": "^2.4.0",
     "d3-hexbin": "^0.2.2",
     "d3-selection": "^1.4.1",
-    "dappy-cli": "0.3.9",
+    "dappy-cli": "0.4.2",
     "rchain-erc1155": "fabcotech/rchain-erc1155",
     "react": "16.8.5",
     "react-dom": "16.8.5"

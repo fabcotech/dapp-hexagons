@@ -7,11 +7,14 @@ body {
 #root {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   height: 100%;
   width: 100%;
 }
 
+.genesis-form {
+  padding-bottom: 10px;
+}
 .genesis-form > p,
 .genesis-form > .field {
   max-width: 600px;
