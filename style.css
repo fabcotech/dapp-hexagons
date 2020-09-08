@@ -1,19 +1,44 @@
-body {
-  height: 100vh;
-  width: 100vw;
-  position: relative;
+html {
+  overflow-y: hidden;
 }
 
+body {
+  width: 100vw;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+#root.loaded {
+  background: radial-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.9));
+}
+#root.loading {
+  background: #111;
+}
+#root.loading:before {
+  content: "Loading";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+}
 #root {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   height: 100%;
   width: 100%;
+  background: radial-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.9));
 }
 
 .genesis-form {
   padding-bottom: 10px;
+  color: #fff;
+}
+.genesis-form label {
+  color: #fff;
 }
 .genesis-form > p,
 .genesis-form > .field {
@@ -21,12 +46,18 @@ body {
 }
 
 .canvas-cont {
+  margin-top: 100px;
   max-width: 1200px;
   min-width: 300px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  color: #fff;
+}
+.canvas-cont .is-2 {
+  color: #fff;
+  margin-bottom: 50px;
 }
 #canvas {
   display: flex;
@@ -36,6 +67,10 @@ body {
 
 .cell-form {
   width: 100%;
+  color: #fff;
+}
+.cell-form .label {
+  color: #fff;
 }
 
 .cell {
@@ -52,6 +87,7 @@ body {
   font-size: 1.6em;
 }
 .n-and-color {
+  padding-left: 60px;
   display: grid;
   grid-template-rows: 100%;
   grid-template-columns: 60% 40%;
@@ -82,6 +118,7 @@ body {
   position: absolute;
   bottom: 10px;
   left: 10px;
+  color: #fff;
 }
 
 .modal {

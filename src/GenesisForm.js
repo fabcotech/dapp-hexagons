@@ -97,19 +97,17 @@ export class GenesisFormComponent extends React.Component {
           this.state.rows ? (
             <p>
               Total REV :{" "}
-              {formatter
-                .format(this.state.price * this.state.columns * this.state.rows)
-                .substr(1)}{" "}
+              {formatter.format(
+                this.state.price * this.state.columns * this.state.rows
+              )}{" "}
               <br />
               Total dust (1 dust is 1 REV divided by 100.000.000):{" "}
-              {formatter
-                .format(
-                  this.state.price *
-                    this.state.columns *
-                    this.state.rows *
-                    100000000
-                )
-                .substr(1)}{" "}
+              {formatter.format(
+                this.state.price *
+                  this.state.columns *
+                  this.state.rows *
+                  100000000
+              )}{" "}
             </p>
           ) : undefined}
         </div>

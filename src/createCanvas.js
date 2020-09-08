@@ -91,7 +91,7 @@ export const createCanvas = (nbColumns, nbRows, bagsData, bags, onClick) => {
       ) {
         return colorsIndexedByTokenId[n];
       } else {
-        return "white";
+        return "rgba(255,255,255,0.5)";
       }
     })
     .on("click", onClick);

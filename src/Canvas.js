@@ -50,6 +50,7 @@ export class CanvasComponent extends React.Component {
   render() {
     return (
       <div className="canvas-cont">
+        <h2 className="title is-2">Fill the canvas !</h2>
         <div
           id="canvas"
           ref={this.el}
@@ -73,19 +74,10 @@ export class CanvasComponent extends React.Component {
                 <span className="cell-available">
                   Price :{" "}
                   <b>
-                    {formatter
-                      .format(this.props.values.price / 100000000)
-                      .substr(1)}{" "}
-                    REV
+                    {formatter.format(this.props.values.price / 100000000)} REV
                   </b>
                   <br />
-                  {formatter
-                    .format(this.props.values.price)
-                    .substr(
-                      1,
-                      formatter.format(this.props.values.price).length - 4
-                    )}{" "}
-                  dusts
+                  {formatter.format(this.props.values.price)} dusts
                 </span>
               </div>
               <div>
@@ -109,7 +101,7 @@ export class CanvasComponent extends React.Component {
                   ></span>
                 </div>
                 <button
-                  className="button is-black"
+                  className="button is-white"
                   disabled={
                     !(this.state.color && typeof this.state.n === "string")
                   }
