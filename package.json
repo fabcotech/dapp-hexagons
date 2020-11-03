@@ -1,7 +1,7 @@
 {
   "name": "dapp-hexagons",
-  "version": "1.0.1",
-  "description": "",
+  "version": "1.0.2",
+  "description": "Web application for dappy to raise funds or create a jackpot in a fun way. Based on RChain ERC-1155.",
   "main": "index.js",
   "scripts": {
     "start": "webpack --mode development --watch",

@@ -6,7 +6,7 @@ import { AppComponent } from "./App";
 document.addEventListener("DOMContentLoaded", function () {
   if (typeof dappyRChain !== "undefined") {
     // testnet
-    if (window.location.href.includes("deltanetwork")) {
+    if (window.dappy.address.includes("deltanetwork")) {
       document.body.setAttribute(
         "style",
         'background-image: url("dappy://deltanetwork/bmadyako1aq9xoegiy5iayq4mqxykrts8h7i9od1ed5krkfo9s6i4m.index");'

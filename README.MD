@@ -1,6 +1,6 @@
 ## dapp-hexagons
 
-Web application for Dappy to raise funds or create a jackpot in a fun way.
+Web application for dappy to raise funds or create a jackpot in a fun way.
 
 Based on ERC-1155.
 
