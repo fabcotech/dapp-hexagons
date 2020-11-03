@@ -8,10 +8,11 @@ body {
   background-position: center;
   background-size: cover;
   background-attachment: fixed;
+  background: linear-gradient(45deg, #46c, #44a);
 }
 
 #root.loaded {
-  background: radial-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.9));
+  background: radial-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.5));
 }
 #root.loading {
   background: #111;

@@ -5,20 +5,6 @@ import { AppComponent } from "./App";
 
 document.addEventListener("DOMContentLoaded", function () {
   if (typeof dappyRChain !== "undefined") {
-    // testnet
-    if (window.dappy.address.includes("deltanetwork")) {
-      document.body.setAttribute(
-        "style",
-        'background-image: url("dappy://deltanetwork/bmadyako1aq9xoegiy5iayq4mqxykrts8h7i9od1ed5krkfo9s6i4m.index");'
-      );
-      //mainnet
-    } else {
-      document.body.setAttribute(
-        "style",
-        'background-image: url("dappy://deltanetwork/bmadyako1aq9xoegiy5iayq4mqxykrts8h7i9od1ed5krkfo9s6i4m.index");'
-        //'background-image: url("dappy://betanetwork/ks9utbyxmjpcqygp595z5azumhum1otcmh57h9menhqqdb5jn5s57w.index");'
-      );
-    }
     dappyRChain
       // shortcut
       .fetch("dappy://REGISTRY_URI")
