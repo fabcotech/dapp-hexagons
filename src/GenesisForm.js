@@ -5,7 +5,7 @@ import { formatter } from "./utils";
 
 export class GenesisFormComponent extends React.Component {
   state = {
-    price: 1,
+    price: 100000000,
     columns: 15,
     rows: 15,
   };
@@ -78,7 +78,7 @@ export class GenesisFormComponent extends React.Component {
           </div>
         </div>
         <div class="field">
-          <label class="label">Price for one cell (REV)</label>
+          <label class="label">Price for one cell (dust)</label>
           <div class="control">
             <input
               defaultValue={this.state.price}
@@ -98,15 +98,14 @@ export class GenesisFormComponent extends React.Component {
             <p>
               Total REV :{" "}
               {formatter.format(
-                this.state.price * this.state.columns * this.state.rows
+                this.state.price * this.state.columns * this.state.rows / 100000000
               )}{" "}
               <br />
               Total dust (1 dust is 1 REV divided by 100.000.000):{" "}
               {formatter.format(
                 this.state.price *
-                  this.state.columns *
-                  this.state.rows *
-                  100000000
+                this.state.columns *
+                this.state.rows
               )}{" "}
             </p>
           ) : undefined}
@@ -131,7 +130,7 @@ export class GenesisFormComponent extends React.Component {
                 this.state.rows
               ) {
                 this.props.onValuesChosen({
-                  price: this.state.price * 100000000,
+                  price: this.state.price,
                   rows: this.state.rows,
                   columns: this.state.columns,
                   nonce: this.props.nonce,

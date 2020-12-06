@@ -1,5 +1,5 @@
 import React from "react";
-import { erc1155Term, purchaseTokensTerm } from "rchain-erc1155";
+import { purchaseTokensTerm, createTokensTerm } from "rchain-token-files";
 
 import { GenesisFormComponent } from "./GenesisForm";
 import { CanvasComponent } from "./Canvas";
@@ -19,91 +19,56 @@ export class AppComponent extends React.Component {
     }
 
     /*
-      tokens will be created by default in the deployment of the ERC-1155 contract
+      each cell will have unique bag with quantity 1
     */
-    let defaultBags = ``;
+    const bags = {
+      "0": {
+        n: "0",
+        quantity: 1,
+        publicKey: this.props.publicKey,
+        price: null,
+        nonce: blockchainUtils.generateNonce(),
+      }
+    };
+    const bagsData = {
+      "0": encodeURI(JSON.stringify({
+        "rows": payload.rows,
+        "price": payload.price,
+        "columns": payload.columns,
+      })),
+    };
     const cells = payload.columns * payload.rows;
-    for (let i = 0; i < cells; i += 1) {
-      // "publicKey": "0" because no one is the owner and should be able to change price
-      defaultBags += `"${i}": { "publicKey": "${
-        "PUBLIC" +
-        "_KEY".substr(
-          0
-        ) /* It must not be replaced by dappy-cli at compilation*/
-      }", "n": "${i}", "price": ${payload.price}, "quantity": 1}${
-        i === cells - 1 ? "" : ","
-      }\n`;
+    for (let i = 1; i < cells + 1; i += 1) {
+      bags[`${i}`] = {
+        n: `${i}`,
+        quantity: 1,
+        publicKey: this.props.publicKey,
+        price: payload.price,
+        nonce: blockchainUtils.generateNonce(),
+      }
     }
 
-    const nonceForErc1155Term = blockchainUtils.generateNonce();
-    const nonceForFilesModule = blockchainUtils.generateNonce();
+    const newNonce = blockchainUtils.generateNonce();
+    const payloadForTerm = {
+      bags: bags,
+      data: bagsData,
+      nonce: this.props.nonce,
+      newNonce: newNonce,
+    }
 
-    const erc1155ContractTerm = erc1155Term(
-      nonceForErc1155Term,
-      "PUBLIC" + "_KEY".substr(0) // It must not be replaced by dappy-cli at compilation
+    const ba = blockchainUtils.toByteArray(payloadForTerm);
+    const term = createTokensTerm(
+      this.props.registryUri.replace("rho:id:", ""),
+      payloadForTerm,
+      'SIGN',
     );
+    console.log(term);
 
-    /*
-      Add tokens by default in the contract
-    */
-    const erc1155TermWithDefaultBags = erc1155ContractTerm.replace(
-      "/*DEFAULT_BAGS*/",
-      defaultBags
-    );
-    /*
-      When the ERC-1155 contract is created, we must record the values in the
-      files module
-    */
-    const erc1155TermWithDefaultBagsAndReturnChannel = erc1155TermWithDefaultBags.replace(
-      "/*OUTPUT_CHANNEL*/",
-      `| erc1155OutputCh!({
-        "registryUri": *entryUri,
-      })`
-    );
-
-    // Storing the registry URI value in the files module
-    const term = `
-   new entryCh, erc1155OutputCh, lookup(\`rho:registry:lookup\`), stdout(\`rho:io:stdout\`) in {
-
-     ${erc1155TermWithDefaultBagsAndReturnChannel} |
-
-     for (@output <- erc1155OutputCh) { 
-       stdout!({
-         "rows": ${payload.rows},
-         "price": ${payload.price},
-         "columns": ${payload.columns},
-         "erc1155RegistryUri": output.get("registryUri"),
-       }) |
-
-       lookup!(\`rho:id:REGISTRY_URI\`, *entryCh) |
-     
-       for(entry <- entryCh) {
-         entry!(
-           {
-             "type": "ADD",
-             "payload": {
-               "id": "values",
-               "file": {
-                 "rows": ${payload.rows},
-                 "price": ${payload.price},
-                 "columns": ${payload.columns},
-                 "erc1155RegistryUri": output.get("registryUri"),
-               },
-               "nonce": "${nonceForFilesModule}",
-               "signature": "SIGNATURE"
-             }
-           },
-           *stdout
-         )
-       }
-     }
-   }
-   `;
     dappyRChain
       .transaction({
         term: term,
         signatures: {
-          SIGNATURE: payload.nonce,
+          SIGN: blockchainUtils.uInt8ArrayToHex(ba),
         },
       })
       .then((a) => {
@@ -114,18 +79,21 @@ export class AppComponent extends React.Component {
   };
 
   onPurchase = (payload) => {
+    const term = purchaseTokensTerm(
+      this.props.registryUri.replace("rho:id:", ""),
+      {
+        publicKey: this.props.publicKey,
+        bagId: payload.bagId,
+        newBagId: payload.newBagId,
+        quantity: 1,
+        price: payload.price,
+        bagNonce: blockchainUtils.generateNonce(),
+        data: encodeURI(payload.color),
+      }
+    );
     dappyRChain
       .transaction({
-        term: purchaseTokensTerm(
-          this.props.erc1155RegistryUri.replace("rho:id:", ""),
-          payload.bagId,
-          payload.price,
-          `${payload.color}`,
-          1,
-          // It must not be replaced by dappy-cli at compilation
-          "PUBLIC" + "_KEY".substr(0),
-          blockchainUtils.generateNonce()
-        ),
+        term: term,
         signatures: {},
       })
       .then((a) => {

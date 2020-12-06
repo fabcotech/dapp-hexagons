@@ -14,5 +14,6 @@ module.exports = {
   externals: {
     react: "React",
     "react-dom": "ReactDOM",
+    "rchain-token-files": "RChainTokenFiles",
   },
 };

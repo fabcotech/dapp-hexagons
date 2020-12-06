@@ -1,6 +1,6 @@
 {
   "name": "dapp-hexagons",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Web application for dappy to raise funds or create a jackpot in a fun way. Based on RChain ERC-1155.",
   "main": "index.js",
   "scripts": {
@@ -21,15 +21,15 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.5",
     "webpack": "^4.29.3",
-    "webpack-cli": "^3.3.6"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "d3": "^5.16.0",
     "d3-array": "^2.4.0",
     "d3-hexbin": "^0.2.2",
     "d3-selection": "^1.4.1",
-    "dappy-cli": "0.4.2",
-    "rchain-erc1155": "fabcotech/rchain-erc1155",
+    "dappy-cli": "0.4.4",
+    "rchain-token-files": "fabcotech/rchain-token#aaf8df2b9715608f307647989f5f8f3e24565bae",
     "react": "16.8.5",
     "react-dom": "16.8.5"
   }

@@ -2,8 +2,8 @@
 
 Web application for dappy to raise funds or create a jackpot in a fun way.
 
-Based on ERC-1155.
+Based on rchain-token.
 
 ![Tipboard on Dappy](https://github.com/fabcotech/dapp-tipboard)
 
-![ERC 1155](https://github.com/fabcotech/rchain-erc1155)
+![rchain-token](https://github.com/fabcotech/rchain-token)

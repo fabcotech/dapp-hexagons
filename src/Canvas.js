@@ -27,16 +27,17 @@ export class CanvasComponent extends React.Component {
         Object.keys(this.props.bags).forEach((bagId) => {
           // bags[bagId].n is the token ID
           if (
-            this.props.bags[bagId].n === `${n}` &&
+            this.props.bags[bagId].n === `${n + 1}` &&
             this.props.bags[bagId].price == this.props.values.price &&
             this.props.bags[bagId].quantity > 0
           ) {
+            console.log('found', n + 1);
             found = true;
-            this.setState({ n: `${n}`, notAvailable: undefined });
+            this.setState({ tokenId: `${n + 1}`, notAvailable: undefined });
           }
         });
         if (!found) {
-          this.setState({ notAvailable: `${n}`, n: undefined });
+          this.setState({ notAvailable: `${n + 1}`, n: undefined });
         }
       }
     );
@@ -48,9 +49,17 @@ export class CanvasComponent extends React.Component {
   };
 
   render() {
+    /* -2 is for the "index" bag and the "0" bag (used for storing columns values)*/
+    const contributions = Object.keys(this.props.bagsData).length - 2;
     return (
       <div className="canvas-cont">
         <h2 className="title is-2">Fill the canvas !</h2>
+        <p className="contributions">
+          {contributions} 
+          {contributions === 1 && " contribution: "} 
+          {contributions !== 1 && " contributions: "}  
+          {formatter.format(contributions * this.props.values.price / 100000000)} REV
+        </p>
         <div
           id="canvas"
           ref={this.el}
@@ -63,11 +72,11 @@ export class CanvasComponent extends React.Component {
               Cell {this.state.notAvailable} is not available
             </p>
           ) : undefined}
-          {typeof this.state.n === "string" ? (
+          {typeof this.state.tokenId === "string" ? (
             <div className="n-and-color">
               <div>
                 <span className="cell">Cell</span>
-                <span className="cell-n">{this.state.n}</span>
+                <span className="cell-n">{this.state.tokenId}</span>
                 <br />
                 <span className="cell-available">Available</span>
                 <br />
@@ -103,15 +112,15 @@ export class CanvasComponent extends React.Component {
                 <button
                   className="button is-white"
                   disabled={
-                    !(this.state.color && typeof this.state.n === "string")
+                    !(this.state.color && typeof this.state.tokenId === "string")
                   }
                   type="button"
                   onClick={(e) => {
-                    if (this.state.color && typeof this.state.n === "string") {
+                    if (this.state.color && typeof this.state.tokenId === "string") {
                       const bagId = Object.keys(this.props.bags).find(
                         (bagId) => {
                           return (
-                            this.props.bags[bagId].n === this.state.n &&
+                            this.props.bags[bagId].n === this.state.tokenId &&
                             this.props.bags[bagId].quantity > 0 &&
                             this.props.bags[bagId].price ===
                               this.props.values.price
@@ -119,8 +128,15 @@ export class CanvasComponent extends React.Component {
                         }
                       );
 
+                      console.log({
+                        bagId: bagId,
+                        newBagId: `${new Date().getTime()}`,
+                        color: this.state.color,
+                        price: this.props.values.price,
+                      });
                       this.props.onPurchase({
                         bagId: bagId,
+                        newBagId: `${new Date().getTime()}`,
                         color: this.state.color,
                         price: this.props.values.price,
                       });
