@@ -13,8 +13,8 @@ export const createCanvas = (nbColumns, nbRows, bagsData, bags, onClick) => {
   Object.keys(bagsData).forEach((key) => {
     // key is the bag ID
     // bags[key].n is the token ID
-    if (bags[key] && bags[key].quantity > 0) {
-      colorsIndexedByTokenId[key] = decodeURI(bagsData[key]);
+    if (key !== "0" && bags[key] && bags[key].quantity > 0) {
+      colorsIndexedByTokenId[bags[key].n] = decodeURI(bagsData[key]);
     }
   });
   console.log('colorsIndexedByTokenId', colorsIndexedByTokenId)

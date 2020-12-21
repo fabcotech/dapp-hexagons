@@ -28,8 +28,8 @@
     "d3-array": "^2.4.0",
     "d3-hexbin": "^0.2.2",
     "d3-selection": "^1.4.1",
-    "dappy-cli": "0.4.4",
-    "rchain-token-files": "fabcotech/rchain-token#aaf8df2b9715608f307647989f5f8f3e24565bae",
+    "dappy-cli": "0.4.5",
+    "rchain-token-files": "fabcotech/rchain-token#adc293753e0e8533477465ca39e26a5669046660",
     "react": "16.8.5",
     "react-dom": "16.8.5"
   }

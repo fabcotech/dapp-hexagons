@@ -1,8 +1,8 @@
-import React from "react";
-import { purchaseTokensTerm, createTokensTerm } from "rchain-token-files";
+import React from 'react';
+import { purchaseTokensTerm, createTokensTerm } from 'rchain-token-files';
 
-import { GenesisFormComponent } from "./GenesisForm";
-import { CanvasComponent } from "./Canvas";
+import { GenesisFormComponent } from './GenesisForm';
+import { CanvasComponent } from './Canvas';
 
 export class AppComponent extends React.Component {
   constructor(props) {
@@ -13,8 +13,8 @@ export class AppComponent extends React.Component {
   }
 
   onValuesChosen = (payload) => {
-    if (typeof dappyRChain === "undefined") {
-      console.warn("window.dappyRChain is undefined, cannot deploy ERC1155");
+    if (typeof dappyRChain === 'undefined') {
+      console.warn('window.dappyRChain is undefined, cannot deploy ERC1155');
       return;
     }
 
@@ -22,20 +22,22 @@ export class AppComponent extends React.Component {
       each cell will have unique bag with quantity 1
     */
     const bags = {
-      "0": {
-        n: "0",
+      0: {
+        n: '0',
         quantity: 1,
         publicKey: this.props.publicKey,
         price: null,
         nonce: blockchainUtils.generateNonce(),
-      }
+      },
     };
     const bagsData = {
-      "0": encodeURI(JSON.stringify({
-        "rows": payload.rows,
-        "price": payload.price,
-        "columns": payload.columns,
-      })),
+      0: encodeURI(
+        JSON.stringify({
+          rows: payload.rows,
+          price: payload.price,
+          columns: payload.columns,
+        })
+      ),
     };
     const cells = payload.columns * payload.rows;
     for (let i = 1; i < cells + 1; i += 1) {
@@ -45,7 +47,7 @@ export class AppComponent extends React.Component {
         publicKey: this.props.publicKey,
         price: payload.price,
         nonce: blockchainUtils.generateNonce(),
-      }
+      };
     }
 
     const newNonce = blockchainUtils.generateNonce();
@@ -54,13 +56,13 @@ export class AppComponent extends React.Component {
       data: bagsData,
       nonce: this.props.nonce,
       newNonce: newNonce,
-    }
+    };
 
     const ba = blockchainUtils.toByteArray(payloadForTerm);
     const term = createTokensTerm(
-      this.props.registryUri.replace("rho:id:", ""),
+      this.props.registryUri.replace('rho:id:', ''),
       payloadForTerm,
-      'SIGN',
+      'SIGN'
     );
     console.log(term);
 
@@ -73,14 +75,36 @@ export class AppComponent extends React.Component {
       })
       .then((a) => {
         this.setState({
-          modal: "values-chosen",
+          modal: 'values-chosen',
         });
       });
   };
 
   onPurchase = (payload) => {
+    /* const term = purchaseTokensTerm(
+      registryUri,
+      {
+        publicKey: publicKey,
+        newBagId: newBagId,
+        bagId: bagId,
+        quantity: quantity,
+        price: price,
+        bagNonce: bagNonce,
+        data: undefined,
+      }
+    ); */
+    console.log(this.props.registryUri.replace('rho:id:', ''));
+    console.log({
+      publicKey: this.props.publicKey,
+      bagId: payload.bagId,
+      newBagId: payload.newBagId,
+      quantity: 1,
+      price: payload.price,
+      bagNonce: blockchainUtils.generateNonce(),
+      data: encodeURI(payload.color),
+    });
     const term = purchaseTokensTerm(
-      this.props.registryUri.replace("rho:id:", ""),
+      this.props.registryUri.replace('rho:id:', ''),
       {
         publicKey: this.props.publicKey,
         bagId: payload.bagId,
@@ -98,13 +122,13 @@ export class AppComponent extends React.Component {
       })
       .then((a) => {
         this.setState({
-          modal: "purchase",
+          modal: 'purchase',
         });
       });
   };
 
   render() {
-    if (this.state.modal === "purchase") {
+    if (this.state.modal === 'purchase') {
       return (
         <div className="modal">
           <div className="modal-background"></div>
@@ -135,7 +159,7 @@ export class AppComponent extends React.Component {
       );
     }
 
-    if (this.state.modal === "genesis-form") {
+    if (this.state.modal === 'values-chosen') {
       return (
         <div className="modal">
           <div className="modal-background"></div>
@@ -149,8 +173,9 @@ export class AppComponent extends React.Component {
               ></button>
             </header>
             <section className="modal-card-body">
-              Submit was successful, wait few minutes, reload, and the ERC-1155
-              contract should be initiated.
+              Submit was successful, wait few minutes, reload, then the
+              rchain-token contract should be initialized with one entry for
+              each cell.
             </section>
             <footer className="modal-card-foot">
               <button
